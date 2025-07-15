@@ -1,6 +1,6 @@
 [theme]
 base                   = "light"        # impose le thème clair
-backgroundColor        = "#1a1717ff"      # = rgb(250,1,142)
+backgroundColor        = "#3d3737ff"      # = rgb(250,1,142)
 secondaryBackgroundColor = "#000000ff"    # zones de contraste
-textColor              = "#f10202ff"
-primaryColor           = "#a10404ff"      # couleur d’accent
+textColor              = "#da8d00ff"
+primaryColor           = "#dfd004ff"      # couleur d’accent

@@ -55,13 +55,11 @@ def show_pc_list():
 
     st.sidebar.header("Filtres avancés")
     filter_cols = [
-        "Processeur", "GPU series", "Type de Disque", "Connecteur(s) disponible(s)",
-        "Type d'écran", "Type de Dalle", "Ecran tactile", "Clavier rétroéclairé",
-        "Clavier RGB", "Lecteur biométrique", "Webcam", "Office fourni",
-        "Norme(s) réseau sans-fil", "Technologie Bluetooth",
-        "Fréquence CPU", "Nombre de core", "Taille de la mémoire", "Taille mémoire vidéo",
-        "Capacité", "Nombre de disques", "Taille de l'écran", "Résolution Max",
-        "Taux de rafraîchissement", "Autonomie", "Capacité de la batterie",
+        "Processeur", "GPU series",
+        "Type d'écran", "Type de Dalle", "Clavier rétroéclairé", "Technologie Bluetooth",
+        "Fréquence CPU", "Nombre de core", "Taille de la mémoire",
+        "Capacité", "Taille de l'écran", "Résolution Max",
+        "Taux de rafraîchissement", "Autonomie",
         "Poids", "Largeur", "Profondeur", "Epaisseur",
         "CPU_benchmark_single_core", "CPU_benchmark_multi_core", "3d_mark", "geekbench",
         "price"
@@ -92,14 +90,25 @@ def show_pc_list():
     for idx, row in filtered.reset_index().iterrows():
         with img_cols[idx % 4]:
             pc_index = row["index"]
+
+            # Titre au-dessus
+            label = str(row["Désignation"]) if pd.notna(row["Désignation"]) else "Sans nom"
+            st.markdown(
+                f"<div style='text-align:center; font-size:1.2rem; font-weight:500; margin-bottom:0.5rem'>{label}</div>",
+                unsafe_allow_html=True
+            )
+
+            # Image avec ombre personnalisée
             img_html = f"""
-            <a href="?pc={pc_index}" target="_self">
-                <img src="{row['img_url']}" style="width:100%; border-radius:8px;" />
+            <a href="?pc={pc_index}" target="_self"> 
+                <img src="{row['img_url']}" style="width:100%; border-radius:8px;
+                    box-shadow: 0px 4px 12px rgba(0, 120, 255, 0.5);" />
             </a>
             """
             st.markdown(img_html, unsafe_allow_html=True)
-            label = str(row["Désignation"]) if pd.notna(row["Désignation"]) else "Sans nom"
-            st.caption(label)
+
+
+
 def show_pc_details():
     pc = df.loc[st.session_state.selected_pc]
 

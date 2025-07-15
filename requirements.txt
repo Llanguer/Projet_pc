@@ -1,0 +1,6 @@
+pip==25.1.1
+pipreqs==0.5.0
+pyperclip==1.9.0
+streamlit==1.46.1
+TableauScraper==0.1.29
+tinycss2==1.4.0
