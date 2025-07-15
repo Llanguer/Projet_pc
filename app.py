@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 from pathlib import Path
+import pyperclip
 
 # ──────────── Config ────────────
 st.set_page_config(page_title="PC Finder", layout="wide")
@@ -20,7 +21,6 @@ if "selected_type" not in st.session_state:
 if "selected_pc" not in st.session_state:
     st.session_state.selected_pc = None
 
-# ──────────── Check paramètre URL (clic image) ────────────
 query_params = st.query_params
 if "pc" in query_params:
     try:
@@ -30,7 +30,6 @@ if "pc" in query_params:
     except:
         pass
 
-# ──────────── Page principale : liste des PC ────────────
 def show_pc_list():
     st.title("Trouve le PC adapté à tes besoins")
 
@@ -47,22 +46,22 @@ def show_pc_list():
             if st.button(act, key=f"btn_{i}"):
                 st.session_state.selected_type = act
                 st.session_state.selected_pc = None
-                st.query_params.clear()  # reset l'URL
-
+                st.query_params.clear()
     if not st.session_state.selected_type:
         st.warning("Veuillez sélectionner une catégorie pour voir les résultats.")
         return
 
     filtered = df[df[st.session_state.selected_type] == 1]
 
-    # ───── Sidebar : filtres ─────
     st.sidebar.header("Filtres avancés")
     filter_cols = [
-        "Processeur", "GPU series",
-        "Type d'écran", "Type de Dalle", "Clavier rétroéclairé", "Office fourni",
-        "Fréquence CPU", "Nombre de core", "Taille de la mémoire",
-        "Capacité", "Taille de l'écran", "Résolution Max",
-        "Taux de rafraîchissement", "Autonomie",
+        "Processeur", "GPU series", "Type de Disque", "Connecteur(s) disponible(s)",
+        "Type d'écran", "Type de Dalle", "Ecran tactile", "Clavier rétroéclairé",
+        "Clavier RGB", "Lecteur biométrique", "Webcam", "Office fourni",
+        "Norme(s) réseau sans-fil", "Technologie Bluetooth",
+        "Fréquence CPU", "Nombre de core", "Taille de la mémoire", "Taille mémoire vidéo",
+        "Capacité", "Nombre de disques", "Taille de l'écran", "Résolution Max",
+        "Taux de rafraîchissement", "Autonomie", "Capacité de la batterie",
         "Poids", "Largeur", "Profondeur", "Epaisseur",
         "CPU_benchmark_single_core", "CPU_benchmark_multi_core", "3d_mark", "geekbench",
         "price"
@@ -75,14 +74,14 @@ def show_pc_list():
             continue
         if col_clean.dtype == object or col_clean.nunique() <= 20:
             options = sorted(col_clean.unique())
-            selected = st.sidebar.multiselect(col, options, default=options)
-            filtered = filtered[filtered[col].isin(selected)]
+            selected = st.sidebar.multiselect(col, options)
+            if selected:
+                filtered = filtered[filtered[col].isin(selected)]
         elif np.issubdtype(col_clean.dtype, np.number):
             mn, mx = float(col_clean.min()), float(col_clean.max())
             low, high = st.sidebar.slider(col, mn, mx, (mn, mx))
             filtered = filtered[(filtered[col] >= low) & (filtered[col] <= high)]
 
-    # ───── Affichage résultats ─────
     if filtered.empty:
         st.warning("Aucun PC ne correspond aux filtres sélectionnés.")
         return
@@ -101,27 +100,86 @@ def show_pc_list():
             st.markdown(img_html, unsafe_allow_html=True)
             label = str(row["Désignation"]) if pd.notna(row["Désignation"]) else "Sans nom"
             st.caption(label)
-
-# ──────────── Page détails PC ────────────
 def show_pc_details():
     pc = df.loc[st.session_state.selected_pc]
+
+    cols = st.columns([5, 1])
+    with cols[1]:
+        if st.button("← Retour"):
+            st.session_state.selected_pc = None
+            st.query_params.clear()
+
     st.title(pc["Désignation"] if pd.notna(pc["Désignation"]) else "Fiche PC")
 
-    st.image(pc["img_url"], width=300)
-    st.markdown("### Détails techniques")
+    st.markdown("---")
+    col_img, col_info = st.columns([1, 4])
+    with col_img:
+        st.image(pc["img_url"], width=250)
+    with col_info:
+        st.markdown("### Résumé technique")
+        def icon_text(icon, text):
+            return f"{icon}  {text}"
 
-    exclude_cols = {"img_url", "Désignation", "Bureautique", "Gamer", "Graphisme"}
-    for col in df.columns:
-        if col in exclude_cols:
-            continue
-        val = pc[col]
-        if pd.isna(val):
-            continue
-        st.write(f"**{col} :** {val}")
+        lines = []
+        if pd.notna(pc.get("Processeur")):
+            lines.append(icon_text("🧠 CPU:", pc["Processeur"]))
+        if pd.notna(pc.get("Nombre de core")):
+            lines.append(icon_text("⚙️ Cœurs:", pc["Nombre de core"]))
+        if pd.notna(pc.get("Taille de la mémoire")):
+            lines.append(icon_text("💾 RAM:", f"{pc['Taille de la mémoire']} Go"))
+        if pd.notna(pc.get("GPU series")):
+            lines.append(icon_text("🎮 GPU:", pc["GPU series"]))
+        if pd.notna(pc.get("Taille de l'écran")):
+            lines.append(icon_text("🖥️ Écran:", f"{pc["Taille de l'écran"]}\""))
+        if pd.notna(pc.get("3d_mark")):
+            lines.append(icon_text("📊 3D Mark:", str(pc["3d_mark"])))
+        st.markdown("<br>".join(lines), unsafe_allow_html=True)
 
-    if st.button("← Retour"):
-        st.session_state.selected_pc = None
-        st.query_params.clear()  # nettoyer l'URL
+        st.markdown("#### 💰 Prix")
+        price = pc.get("price")
+
+        if pd.notna(price):
+            try:
+                price_str = str(price).replace("€", "").replace(" ", "")
+                if price_str[-2:].isdigit():
+                    price_float = float(price_str[:-2] + "." + price_str[-2:])
+                    st.success(f"{price_float:,.2f} €".replace(",", " ").replace(".00", ""))
+                else:
+                    st.info(f"Prix : {price}")
+            except:
+                st.info(f"Prix : {price}")
+        else:
+            st.info("Prix non renseigné")
+
+
+    st.markdown("---")
+    col_left, col_right = st.columns(2)
+    with col_left:
+        st.subheader("💡 Performances")
+        for key in ["CPU_benchmark_single_core", "CPU_benchmark_multi_core", "geekbench"]:
+            if key in pc and pd.notna(pc[key]):
+                st.write(f"**{key} :** {pc[key]}")
+        st.subheader("📦 Stockage & Batterie")
+        for key in ["Type de Disque", "Capacité", "Nombre de disques", "Autonomie", "Capacité de la batterie"]:
+            if key in pc and pd.notna(pc[key]):
+                st.write(f"**{key} :** {pc[key]}")
+    with col_right:
+        st.subheader("🔌 Connectivité & Extras")
+        for key in ["Connecteur(s) disponible(s)", "Type d'écran", "Type de Dalle", "Ecran tactile",
+                    "Clavier rétroéclairé", "Clavier RGB", "Lecteur biométrique", "Webcam", "Office fourni",
+                    "Norme(s) réseau sans-fil", "Technologie Bluetooth"]:
+            if key in pc and pd.notna(pc[key]):
+                st.write(f"**{key} :** {pc[key]}")
+
+    # Bouton de partage
+    base_url = "http://localhost:8501"
+    full_url = f"{base_url}/?pc={st.session_state.selected_pc}"
+    if st.button("📋 Copier le lien de partage"):
+        try:
+            pyperclip.copy(full_url)
+            st.success("Lien copié dans le presse-papier !")
+        except Exception:
+            st.code(full_url, language="text")
 
 # ──────────── Navigation ────────────
 if st.session_state.selected_pc is None:
