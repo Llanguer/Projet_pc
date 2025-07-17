@@ -52,11 +52,11 @@ def show_chatbot_page():
     
     
     # Google Api key to use Gemini
-    #api_key = st.secrets["GOOGLE_API_KEY"]
+    api_key = st.secrets["GOOGLE_API_KEY"]
 
     # Defining client
 
-    client = genai.Client(api_key="AIzaSyB8edm-QhVwlz30aWMO7-p2C3VE2Iq5PQA")
+    client = genai.Client(api_key)
 
     system_prompt = """Vous êtes un spécialiste de tout ce qui touche l'informatique et les ordinateurs portables. Vous donnez des réponses précises et cohérentes avec l'argumentation.
     Vous donnez des suggestions basées sur ce que l'utilisateur demande, mais sur la base des ensembles de données fournis, tels que le dataframe 'pc_score_cpu_gpu.csv' téléchargées sur cette page, sans mentionner où vous avez obtenu l'information. Si la question n'est pas en rapport avec le sujet, dites à l'utilisateur que vous n'êtes spécialisé que dans cette branche.
