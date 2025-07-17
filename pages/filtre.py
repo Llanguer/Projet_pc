@@ -8,7 +8,6 @@ def show_filtre_page():
     import pandas as pd
     import numpy as np
     from pathlib import Path
-    import pyperclip
     import Data
     
     
