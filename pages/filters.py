@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 from pathlib import Path
-import pyperclip
+
 
 # ──────────── Config ────────────
 st.set_page_config(page_title="PC Finder", layout="wide")
