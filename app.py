@@ -3,7 +3,46 @@ import pandas as pd
 from pathlib import Path
 
 
+# --------------------------- Bar naviagation ----------------------------------
+from streamlit_option_menu import option_menu
 
+with st.container():
+    selected = option_menu(
+        menu_title=None,
+        options=["Home", "Filtre", "ChatBot"],
+        icons=[],  # No icons
+        default_index=0,
+        orientation="horizontal",
+        styles={
+            "container": {
+                "padding": "0!important",
+                "background-color": "#05335F",
+                "class": "navbar-fixed",  # Add fixed class
+            },
+            "nav-link": {
+                "color": "white",
+                "font-size": "16px",
+                "margin": "0px",
+                "padding": "10px",
+            },
+            "nav-link-selected": {
+                "background-color": "#1B4F72"
+            },
+        }
+    )
+if selected == "Home":
+    selected =  "Home"
+if selected == "Filtre":
+    st.switch_page("pages/filtre.py")
+if selected == "ChatBot":
+    st.switch_page("pages/chatbot.py")
+#if selected == "Contact":
+#    st.switch_page("pages/Contact.py")
+
+
+
+
+# ----------------------------------------------------
 
 # Logo Site
 logoright, logomid, logoleft = st.columns([0.5,2,0.5])
@@ -89,4 +128,4 @@ with left:
     st.write('Avec la recherche par filtres, explorez les modèles selon les caractéristiques, pour trouver l’ordinateur qui vous convient.')
     st.image(Path(__file__).parent / "assets" / "filterimg.png")
     if st.button("Filters", use_container_width=True):
-        st.switch_page("pages/filters.py")
+        st.switch_page("pages/filtre.py")

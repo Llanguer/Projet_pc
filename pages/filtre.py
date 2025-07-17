@@ -1,8 +1,48 @@
 import streamlit as st
 
 
-# ─── Config ───
+# --------------------------- Bar naviagation ----------------------------------
+from streamlit_option_menu import option_menu
 
+with st.container():
+    selected = option_menu(
+        menu_title=None,
+        options=["Home", "Filtre", "ChatBot"],
+        icons=[],  # No icons
+        default_index=1,
+        orientation="horizontal",
+        styles={
+            "container": {
+                "padding": "0!important",
+                "background-color": "#05335F",
+                "class": "navbar-fixed",  # Add fixed class
+            },
+            "nav-link": {
+                "color": "white",
+                "font-size": "16px",
+                "margin": "0px",
+                "padding": "10px",
+            },
+            "nav-link-selected": {
+                "background-color": "#1B4F72"
+            },
+        }
+    )
+if selected == "Home":
+    st.switch_page("app.py")
+if selected == "Filtre":
+    selected =  "Filtre"
+if selected == "ChatBot":
+    st.switch_page("pages/chatbot.py")
+#if selected == "Contact":
+#    st.switch_page("pages/Contact.py")
+
+
+
+
+# ----------------------------------------------------
+
+# ─── Config ───
 
 def show_filtre_page():
     import pandas as pd
@@ -12,7 +52,7 @@ def show_filtre_page():
     
     
     # ─── Data ───
-    csv_path = "Data/pc_score_cpu_gpu.csv"
+    csv_path = Path(__file__).parent.parent / "Data" / "pc_score_cpu_gpu.csv"
     df = pd.read_csv(csv_path)
 
     req = {"img_url", "Désignation", "Bureautique", "Gamer", "Graphisme"}

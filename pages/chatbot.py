@@ -1,6 +1,45 @@
 import streamlit as st 
 
+# --------------------------- Bar naviagation ----------------------------------
+from streamlit_option_menu import option_menu
 
+with st.container():
+    selected = option_menu(
+        menu_title=None,
+        options=["Home", "Filtre", "ChatBot"],
+        icons=[],  # No icons
+        default_index=2,
+        orientation="horizontal",
+        styles={
+            "container": {
+                "padding": "0!important",
+                "background-color": "#05335F",
+                "class": "navbar-fixed",  # Add fixed class
+            },
+            "nav-link": {
+                "color": "white",
+                "font-size": "16px",
+                "margin": "0px",
+                "padding": "10px",
+            },
+            "nav-link-selected": {
+                "background-color": "#1B4F72"
+            },
+        }
+    )
+if selected == "Home":
+    st.switch_page("app.py")
+if selected == "Filtre":
+    st.switch_page("pages/filtre.py")
+if selected == "ChatBot":
+    selected =  "ChatBot"
+#if selected == "Contact":
+#    st.switch_page("pages/Contact.py")
+
+
+
+
+# ----------------------------------------------------
 
 
 
@@ -13,11 +52,11 @@ def show_chatbot_page():
     
     
     # Google Api key to use Gemini
-    api_key = st.secrets["GOOGLE_API_KEY"]
+    #api_key = st.secrets["GOOGLE_API_KEY"]
 
     # Defining client
 
-    client = genai.Client(api_key=api_key)
+    client = genai.Client(api_key="AIzaSyB8edm-QhVwlz30aWMO7-p2C3VE2Iq5PQA")
 
     system_prompt = """Vous êtes un spécialiste de tout ce qui touche l'informatique et les ordinateurs portables. Vous donnez des réponses précises et cohérentes avec l'argumentation.
     Vous donnez des suggestions basées sur ce que l'utilisateur demande, mais sur la base des ensembles de données fournis, tels que le dataframe 'pc_score_cpu_gpu.csv' téléchargées sur cette page, sans mentionner où vous avez obtenu l'information. Si la question n'est pas en rapport avec le sujet, dites à l'utilisateur que vous n'êtes spécialisé que dans cette branche.
