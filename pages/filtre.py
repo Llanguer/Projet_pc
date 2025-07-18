@@ -3,7 +3,6 @@ import streamlit as st
 
 # --------------------------- Bar naviagation ----------------------------------
 from streamlit_option_menu import option_menu
-
 with st.container():
     selected = option_menu(
         menu_title=None,
@@ -28,11 +27,15 @@ with st.container():
             },
         }
     )
-if selected == "Home":
+if selected == "Home":    
+    st.session_state.selected_pc = None
+    st.query_params.clear()
     st.switch_page("app.py")
 if selected == "Filtre":
     selected =  "Filtre"
 if selected == "ChatBot":
+    st.session_state.selected_pc = None
+    st.query_params.clear()
     st.switch_page("pages/chatbot.py")
 #if selected == "Contact":
 #    st.switch_page("pages/Contact.py")
