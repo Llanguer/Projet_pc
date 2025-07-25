@@ -16,7 +16,7 @@ with st.container():
         styles={
             "container": {
                 "padding": "0!important",
-                "background-color": "#05335F",
+                "background-color": "#da8d00ff",
                 "class": "navbar-fixed",  # Add fixed class
             },
             "nav-link": {
@@ -26,7 +26,7 @@ with st.container():
                 "padding": "10px",
             },
             "nav-link-selected": {
-                "background-color": "#1B4F72"
+                "background-color": "#dfd004ff"
             },
         }
     )
@@ -40,73 +40,23 @@ if selected == "ChatBot":
 #    st.switch_page("pages/Contact.py")
 
 
-
-
 # ----------------------------------------------------
 
+
 # Logo Site
-logoright, logomid, logoleft = st.columns([0.5,2,0.5])
+logoright, logomid, logoleft = st.columns([1,2,1])
 
 imgpc_reco = Path(__file__).parent / "assets" / "logo_pngv2.png"
 logomid.image(imgpc_reco)
 
-st.set_page_config(page_title="Trouve le PC adapté à tes besoins", page_icon="💻",)
-
-st.markdown("""
-<style>
-    .st-emotion-cache-1jicfl2 {
-        display: none;
-    }
-    
-    .st-emotion-cache-1y4p8pa {
-        display: none;
-    }
-    
-    .st-emotion-cache-10trblm {
-        display: none;
-    }
-    
-    [data-testid="stSidebarNav"] {
-        display: none;
-    }
-</style>
-""", unsafe_allow_html=True)
-
-def load_page(page_path):
-    try:
-        with open(page_path, 'r', encoding='utf-8') as f:
-            exec(f.read())
-    except FileNotFoundError:
-        st.error(f"Pagina non trovata: {page_path}")
-    except Exception as e:
-        st.error(f"Errore nel caricamento della pagina: {e}")
-
-st.sidebar.title("Navigation")
-
-menu_option = {
-    "🏠 Homepage": "app",
-    "💻 Recherche PC": "filtre", 
-    "🧠 ChatBot": "chatbot"
-}
 
 
-selected = st.sidebar.selectbox(
-    "Sélectionnez une page:",
-    list(menu_option.keys())
-)
+# Corp do site
+#st.write("""Vous cherchez un ordinateur, mais vous ne savez pas lequel choisir ?
+#         \nNe perdez plus de temps à comparer des centaines de modèles !""")
 
-
-if selected == "🏠 Homepage":
-    st.title("HomePage")
-elif selected == "💻 Recherche PC":
-    load_page("pages/filtre.py")
-elif selected == "🧠 ChatBot":
-    load_page("pages/chatbot.py")
-
-st.text("""Vous cherchez un ordinateur, mais vous ne savez pas lequel choisir ? \nNe perdez plus de temps à comparer des centaines de modèles !""")
-
-st.subheader("",divider='red')
-st.subheader("PC Advisor, vous aide à trouver le PC idéal, parfaitement adapté à votre usage et à votre budget.", divider= 'red')
+st.subheader("",divider='rainbow')
+st.subheader("PC Advisor, vous aide à trouver le PC idéal, parfaitement adapté à votre usage et à votre budget.", divider= 'rainbow')
 
 st.subheader("Comment ça marche ?")
 st.write("""Dites-nous ce dont vous avez besoin:

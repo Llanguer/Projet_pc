@@ -13,7 +13,7 @@ with st.container():
         styles={
             "container": {
                 "padding": "0!important",
-                "background-color": "#05335F",
+                "background-color": "#da8d00ff",
                 "class": "navbar-fixed",  # Add fixed class
             },
             "nav-link": {
@@ -23,7 +23,7 @@ with st.container():
                 "padding": "10px",
             },
             "nav-link-selected": {
-                "background-color": "#1B4F72"
+                "background-color": "#dfd004ff"
             },
         }
     )
@@ -39,9 +39,6 @@ if selected == "ChatBot":
     st.switch_page("pages/chatbot.py")
 #if selected == "Contact":
 #    st.switch_page("pages/Contact.py")
-
-
-
 
 # ----------------------------------------------------
 
