@@ -7,6 +7,7 @@ from google.genai.types import HttpOptions, ModelContent, Part, UserContent
 import google.generativeai as genai
 from google.generativeai import types
 import json # On a besoin de la bibliothèque JSON
+from pathlib import Path
 
 # --------------------------- Bar naviagation ----------------------------------
 from streamlit_option_menu import option_menu
@@ -45,7 +46,7 @@ if selected == "ChatBot":
 #    st.switch_page("pages/Contact.py")
 
 # Liste de colluns
-uploaded_file = 'Projet_pc\Data\pc_score_cpu_gpu.csv'
+uploaded_file = Path(__file__).parent.parent / "Data" / "pc_score_cpu_gpu.csv"
 df = pd.read_csv(uploaded_file)
 Col_liste = list(df.columns)
 
@@ -72,27 +73,18 @@ def extraire_criteres_de_recherche(user_question, api_key):
         "marque_cpu": "string",       // "Intel" ou "AMD"
         "marque_gpu": "string",       // "NVIDIA", "AMD", ou "Intel"
         "ram_min": "string",         // La RAM minimum en Go (ex: 16, 32)
-        "stockage_min": "integer",    // Le stockage minimum en Go (ex: 512, 1000 pour 1To)
         "type_disque": "string"       // "SSD" ou "HDD"
       },
       "ecran": {
         "taille_min": "string",        // La taille d'écran minimum en pouces (ex: 15)
-        "tactile": "boolean",         // true si tactile demandé
         "taux_rafraichissement_min": "integer", // Le taux de rafraîchissement min en Hz (ex: 120, 144)
         "type_dalle": "string",       // "mat" ou "brillant"
         "resolution_specifique": "string" // "QHD", "4K", "Full HD"
       },
       "portabilite_et_design": {
         "poids_max": "string",         // Le poids maximum en kg (ex: 1.5)
-        "ultrabook": "boolean",       // true si l'utilisateur veut un ultrabook
         "couleur": "string",          // Couleur spécifique (ex: "noir", "gris", "blanc")
         "materiau": "string"          // Matériau spécifique (ex: "aluminium", "métal")
-      },
-      "clavier_et_connectique": {
-        "clavier_retroeclaire": "boolean", // true si rétroéclairé demandé
-        "clavier_rgb": "boolean",     // true si RGB demandé (plus spécifique que rétroéclairé)
-        "pave_numerique": "boolean",  // true si pavé numérique demandé
-        "charge_usb_c": "boolean"     // true si la charge par USB-C est un critère
       }
     }
 
@@ -174,7 +166,7 @@ def show_chatbot_page():
     mid.title("Le spécialiste de la Tech")
     mid.markdown("Bienvenue ! Posez-moi vos questions sur les ordinateurs portables.")
 
-    uploaded_file = 'Projet_pc\Data\pc_score_cpu_gpu.csv'
+    uploaded_file = Path(__file__).parent.parent / "Data" / "pc_score_cpu_gpu.csv"
 
     if uploaded_file is not None:
         # On charge le DataFrame une seule fois et on le met en cache Streamlit
