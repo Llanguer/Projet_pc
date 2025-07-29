@@ -65,7 +65,7 @@ def extraire_criteres_de_recherche(user_question, api_key):
     {
       "critere_principal": {
         "budget_max": "integer",      // Le prix maximum en euros (ex: 1200)
-        "usage": "string",            // Une de ces valeurs : "gaming", "bureautique", "graphisme", "multimedia", "professionnel"
+        "usage": "string",            // Une de ces valeurs : "gaming", "bureautique", "graphisme"
         "marque": "string"            // La marque du PC (ex: "Asus", "HP", "Apple", "Dell", "Lenovo")
         "os": "string"            // NOUVELLE LIGNE : Les valeurs possibles sont "Windows", "macOS", "ChromeOS", ou "Linux"
       },
@@ -193,9 +193,9 @@ def show_chatbot_page():
             if user_question:
                 with st.spinner("Analyse de votre demande..."):
                     # --- ÉTAPE 1 : Extraire les critères ---
-                    api_key = "key" # Votre clé
+                    api_key = "AIzaSyAsT-ElCGrg8UeZcnmrMPKA54Pgx32aFBA" # Votre clé
                     criteres = extraire_criteres_de_recherche(user_question, api_key)
-                    #st.write("Critères détectés :", criteres) # Ligne de debug, à enlever plus tard
+                    st.write("Critères détectés :", criteres) # Ligne de debug, à enlever plus tard
 
                     # --- ÉTAPE 2 : Filtrer le DataFrame --
                     df_filtre = appliquer_filtres_df(df, criteres)
