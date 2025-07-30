@@ -194,9 +194,9 @@ def show_chatbot_page():
             if user_question:
                 with st.spinner("Analyse de votre demande..."):
                     # --- ÉTAPE 1 : Extraire les critères ---
-                    api_key = "AIzaSyCGfYWi3FlmWHBv-h-klLmMZNrUGoM4FEs" # Votre clé
+                    api_key = "Key" # Votre clé
                     criteres = extraire_criteres_de_recherche(user_question, api_key)
-                    st.write("Critères détectés :", criteres) # Ligne de debug, à enlever plus tard
+                    #st.write("Critères détectés :", criteres) # Ligne de debug, à enlever plus tard
 
                     # --- ÉTAPE 2 : Filtrer le DataFrame --
                     df_filtre = appliquer_filtres_df(df, criteres)
