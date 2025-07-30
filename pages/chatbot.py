@@ -122,6 +122,7 @@ def appliquer_filtres_df(df, criteres):
         usage = cp.get("usage")
         if usage == "gaming": df_filtre = df_filtre[df_filtre['Gamer'] == True]
         elif usage == "graphisme": df_filtre = df_filtre[df_filtre['Graphisme'] == True]
+        elif usage == "bureautique": df_filtre = df_filtre[df_filtre['Bureautique'] == True]
         if cp.get("os"): df_filtre = df_filtre[df_filtre["Système d'exploitation"].str.contains(cp["os"], case=False, na=False)]
         # ... autres usages
 
@@ -193,7 +194,7 @@ def show_chatbot_page():
             if user_question:
                 with st.spinner("Analyse de votre demande..."):
                     # --- ÉTAPE 1 : Extraire les critères ---
-                    api_key = "AIzaSyAsT-ElCGrg8UeZcnmrMPKA54Pgx32aFBA" # Votre clé
+                    api_key = "AIzaSyCGfYWi3FlmWHBv-h-klLmMZNrUGoM4FEs" # Votre clé
                     criteres = extraire_criteres_de_recherche(user_question, api_key)
                     st.write("Critères détectés :", criteres) # Ligne de debug, à enlever plus tard
 
